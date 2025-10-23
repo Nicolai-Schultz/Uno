@@ -20,10 +20,10 @@ public class DrawPile {
     }
 
     public static void printDeck(List<Card> cards) {
-        for (int i = 0; i < cards.size(); i++) {
+        for (Card card : cards) {
             System.out.println(
-                cards.get(i).color +
-                cards.get(i).number
+                    card.color +
+                    card.number
             );
         }
     }
