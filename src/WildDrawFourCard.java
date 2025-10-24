@@ -1,4 +1,7 @@
 public abstract class WildDrawFourCard extends Card implements WildColorEffect, DrawEffect, SkipEffect{
+    public WildDrawFourCard(int ID, int number, String color, String effect) {
+        super(ID, number, color, effect);
+    }
     // explanation:
     // The player chooses the color for the next play,
     // and the next player must draw four cards and loses their turn.
