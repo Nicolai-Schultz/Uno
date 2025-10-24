@@ -7,8 +7,7 @@ public class DrawPile {
         List<Card> cards = new ArrayList<>();
         String[] color = {"Red", "Green", "Blue", "Yellow"};
         int ID = 0;
-        for (int i = 0; i < 4; i++) {
-            String currentColor = color[i];
+        for (String currentColor : color) {
             for (int value = 0; value <= 9; value++) {
                 cards.add(new Card(ID, value, currentColor, "None"));
                 ID++;
