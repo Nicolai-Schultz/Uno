@@ -1,4 +1,4 @@
-public class Card {
+public class Card{
     int ID;
     int number;
     String color;
@@ -14,14 +14,17 @@ public class Card {
         this.effect = effect;
     }
 
+    // look into throwing certain exceptions based on the issue
     public boolean canBePlayedOn(Card other) {
-        // the card being played has to equal the top card in either
-        // color, number or it has to be an effect card.
-        return (!(this.effect.equals("None")) && this.color.equals(other.color)) || this.color.equals(other.color) || this.number == other.number;
+        // the card can be played if it matches color, number, or is a wild card
+        return this.color.equals(other.color)
+            || this.number == other.number
+            || this.effect.equals("WildCard")
+            || this.effect.equals("WildDrawFour");
     }
 
     @Override
     public String toString() {
-        return "Number " + this.number + " Color: " + this.color + " Effect: " + this.effect + " ";
-    }
+        return "[ " + color.toUpperCase() + " | " +
+                (effect.equals("none") ? number : effect.toUpperCase()) + " ]";    }
 }

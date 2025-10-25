@@ -9,16 +9,16 @@ public class DrawPile {
         // Creating all cards which number is zero; there should only be one of each
         for(String currentColor: color){
             List<Card> cards = this.getCards();
-            cards.add(new Card(ID, 0, currentColor, "none"));
+            cards.add(new NumberCard(ID, 0, currentColor, "none"){});
         }
         // Creating all numbered cards; there should be two of each
         for (String currentColor : color) {
             for (int value = 1; value <= 9; value++) {
                 List<Card> cards = this.getCards();
                 //
-                cards.add(new Card(ID, value, currentColor, "none"));
+                cards.add(new NumberCard(ID, value, currentColor, "none"){});
                 ID++;
-                cards.add(new Card(ID, value, currentColor, "none"));
+                cards.add(new NumberCard(ID, value, currentColor, "none"){});
                 ID++;
             }
         }

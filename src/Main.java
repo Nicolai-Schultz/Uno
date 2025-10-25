@@ -7,5 +7,6 @@ public class Main {
         var drawPile = new DrawPile();
         var gameState = new GameState();
         gameState.gameStart(drawPile);
+        gameState.playGame();
     }
 }
