@@ -19,4 +19,9 @@ public class Card {
         // color, number or it has to be an effect card.
         return (!(this.effect.equals("None")) && this.color.equals(other.color)) || this.color.equals(other.color) || this.number == other.number;
     }
+
+    @Override
+    public String toString() {
+        return "Number " + this.number + " Color: " + this.color + " Effect: " + this.effect + " ";
+    }
 }

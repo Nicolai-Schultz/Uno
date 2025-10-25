@@ -3,12 +3,7 @@ import java.util.*;
 public class DrawPile {
     private final List<Card> cards = new ArrayList<>();
 
-
-    public List<Card> getCards() {
-        return cards;
-    }
-
-    public List<Card> makeDeck() {
+    public DrawPile() {
         String[] color = {"Red", "Green", "Blue", "Yellow"};
         int ID = 0;
         // Creating all cards which number is zero; there should only be one of each
@@ -59,11 +54,29 @@ public class DrawPile {
                 });
                 ID++;
         }
-
-        return this.cards;
+        // shuffle cards
+        Collections.shuffle(this.getCards());
     }
 
+    public List<Card> getCards() {
+        return cards;
+    }
 
+    // cannot return a single card as it has to remove that card from the pile as well
+    // has to interact directly with playerHand
+    // method cannot be in Player class, since drawCard has to directly access the deck
+    public Card drawTopCard() {
+        List<Card> cards = this.getCards();
+        Card topCard = cards.getFirst();
+        // assume cards are shuffled and take from the top, while removing it from the drawPile
+        cards.removeFirst();
+        return topCard;
+    }
+
+    public Card displayTopCard() {
+        List<Card> cards = this.getCards();
+        return cards.getFirst();
+    }
 
     public static void printDeck(List<Card> cards) {
         for (Card card : cards) {
@@ -75,10 +88,6 @@ public class DrawPile {
     }
 
     public void makeDeckAndPrint() {
-        DrawPile.printDeck(this.makeDeck());
+        DrawPile.printDeck(this.cards);
     }
-
-    // this shuffles:
-    // Collections.shuffle(deck);
-    //        DrawPile.printDeck(deck);
 }
