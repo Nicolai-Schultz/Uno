@@ -5,6 +5,7 @@ public abstract class NumberCard extends Card implements Effect {
 
     @Override
     public void effect(GameState gameState) {
+        System.out.println("Used NumberCard effect");
         gameState.advanceTurn(1);
     }
 }

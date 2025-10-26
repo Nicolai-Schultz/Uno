@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -6,12 +7,42 @@ public class GameState {
     private static final int FIRST_DRAW_CONSTANT = 7;
     private final List<Player> players = new ArrayList<>();
     private final Scanner scanner = new Scanner(System.in);
-    private PlayPile playPile = new PlayPile();
+    private final PlayPile playPile = new PlayPile();
     private final DrawPile drawPile = new DrawPile();
     private int currentTurn;
 
-    public int getNumberOfPlayers() {
-        return players.size();
+    public Scanner getScanner() {
+        return scanner;
+    }
+
+    public void setTopCard(String color) {
+        // this creates an issue. Given that a player plays a wildcard, the number does not become irrelevant; meaning that a player
+        // is not forced to play the chosen color.
+        // this is fixed by giving the card an unmatchable number.
+
+        // the id can never be between 0 and 107 (or 108), picking 108 just to be certain
+        java.util.Random random = new java.util.Random();
+        int id;
+        do {
+            id = random.nextInt(10000);
+        } while (id <= 108);
+        int number = 999;
+
+        String effect = "None";
+        Card topCard = new Card(id, number, color, effect);
+        playPile.add(topCard);
+    }
+
+    public void reversePlayersList() {
+        Collections.reverse(this.players);
+        int n = players.size();
+        if (n > 0) {
+            this.currentTurn = n - 1 - this.currentTurn;
+        }
+    }
+
+    public Player getNextPlayer() {
+        return players.get(normalizeIndex(getCurrentTurn() + 1));
     }
 
     public int getCurrentTurn() {
@@ -73,9 +104,15 @@ public class GameState {
             // do action
             if(actionChoice.equals("c")){
                 int cardId = getCardFromId();
-                actionPlayCard(cardId);
+                // if the played card is incompatible, it should rerun loop.
+                if (!actionPlayCard(cardId)) continue;
                 // Use effect of card. If a numbercard is played it should simply increment turnofplay
-                useEffect(cardId, this);
+                // should check if player has 0 cards
+                actionRemoveCardFromHand(cardId);
+                if (gameWonCheck()) break;
+                // useEffect should look at the top card.
+                // in order to do this properly, actionPlayCard should restart the loop if card is incompat.
+                useEffect(this);
             } else if (actionChoice.equals("d")) {
                 actionDrawCard();
                 incrementTurn(1);
@@ -88,9 +125,17 @@ public class GameState {
         } while (true);
     }
 
-    public void setCurrentTurn(int currentTurn) {
-        this.currentTurn = normalizeIndex(currentTurn);
+    private boolean gameWonCheck() {
+        // a player wins when they have no cards left
+        // the engine should continously check each player hand to see if any are == 0.
+        // could be improved by simply checking the state of current_player_hand
+        if(players.get(currentTurn).getPlayerHand().isEmpty()){
+            System.out.println(players.get(currentTurn) + " wins!");
+            return true;
+        }
+        return false;
     }
+
 
     private int normalizeIndex(int index) {
         int n = players.size();
@@ -112,18 +157,26 @@ public class GameState {
         return scanner.nextInt();
     }
 
-    private void actionPlayCard(int cardId){
-        players.get(getCurrentTurn()).playCard(cardId, getPlayPile());
-        System.out.println("You played: " + getPlayPile().getTopCard());
+    private boolean actionPlayCard(int cardId){
+        if (players.get(getCurrentTurn()).playCard(cardId, getPlayPile())){
+            System.out.println("You played: " + getPlayPile().getTopCard());
+            return true;
+        }
+        return false;
+    }
+
+    private void actionRemoveCardFromHand(int cardId) {
+        // issue here. Removes from the next player's hand.
+        players.get(getCurrentTurn()).removeCardFromHand(cardId);
     }
 
     private void actionDrawCard(){
         players.get(getCurrentTurn()).drawCard(getDrawPile());
-        displayHand();
+        // maybe display drawn card?
     }
 
-    private void useEffect(int cardId, GameState gameState) {
-        Card playedCard = players.get(getCurrentTurn()).getCardFromHand(cardId);
+    private void useEffect(GameState gameState) {
+        Card playedCard = playPile.getTopCard();
         if (playedCard instanceof Effect effectCard) {
             effectCard.effect(gameState);
         }

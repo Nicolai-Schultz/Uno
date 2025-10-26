@@ -1,4 +1,6 @@
-public abstract class WildDrawFourCard extends Card implements WildColorEffect, DrawEffect, SkipEffect{
+import java.util.Scanner;
+
+public abstract class WildDrawFourCard extends Card implements Effect{
     public WildDrawFourCard(int ID, int number, String color, String effect) {
         super(ID, number, color, effect);
     }
@@ -9,25 +11,37 @@ public abstract class WildDrawFourCard extends Card implements WildColorEffect, 
     // no other cards that match the current color
 
     @Override
-    public void wildColor(){
-        // prompt the user for the new color of the topcard
-    }
+    public void effect(GameState gameState){
+        System.out.println("WILDCARDdrawfour effect used");
+        // should prompt the user for color, and change the value of the topcard to that color.
+        // "Red", "Green", "Blue", "Yellow"
+        System.out.println("Choose a new color! RED [0], GREEN [1], BLUE [2], YELLOW [3]");
+        Scanner scanner = gameState.getScanner();
+        int choice = scanner.nextInt();
+        switch (choice) {
+            case 0:
+                gameState.setTopCard("Red");
+                break;
+            case 1:
+                gameState.setTopCard("Green");
+                break;
+            case 2:
+                gameState.setTopCard("Blue");
+                break;
+            case 3:
+                gameState.setTopCard("Yellow");
+                break;
+        }
+        System.out.println("Used DrawTwoCard effect");
+        // should add two cards to the player hand from the drawpile
+        // Conceptually
+        Player next = gameState.getNextPlayer();
+        // draw four cards
+        next.drawCard(gameState.getDrawPile());
+        next.drawCard(gameState.getDrawPile());
+        next.drawCard(gameState.getDrawPile());
+        next.drawCard(gameState.getDrawPile());
 
-    @Override
-    public void draw(){
-        // the next player must draw 4 cards
-    }
-
-    @Override
-    public void skip(){
-        // The player who drew 4 cards must be skipped
-    }
-
-    public void wildDrawFour(){
-        // make sure to check if the player has no other cards that match the current color
-        // else throw an exception
-        wildColor();
-        draw();
-        skip();
+        gameState.advanceTurn(2); // skip their turn after drawing
     }
 }

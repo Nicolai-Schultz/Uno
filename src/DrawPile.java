@@ -25,19 +25,22 @@ public class DrawPile {
 
         // Creating all specials
         // There should be two of each skip, reverse and drawTwo per color.
-        for(int i = 0; i < (color.length*2); i++){
-            List<Card> cards = this.getCards();
-            // skip
-            cards.add(new SkipCard(ID, 0, "SkipCard", "SkipCard") {
-            });
-
-            // reverse
-            cards.add(new ReverseCard(ID, 0, "ReverseCard", "ReverseCard") {
-            });
-
-            // drawTwo
-            cards.add(new DrawTwoCard(ID, 0, "DrawTwoCard", "DrawTwoCard") {
-            });
+        for (String currentColor : color) {
+            for (int j = 0; j < 2; j++) {
+                List<Card> cards = this.getCards();
+                // skip
+                cards.add(new SkipCard(ID, 0, currentColor, "SkipCard") {
+                });
+                ID++;
+                // reverse
+                cards.add(new ReverseCard(ID, 0, currentColor, "ReverseCard") {
+                });
+                ID++;
+                // drawTwo
+                cards.add(new DrawTwoCard(ID, 0, currentColor, "DrawTwoCard") {
+                });
+                ID++;
+            }
         }
 
         // creating all wildcards
@@ -71,11 +74,6 @@ public class DrawPile {
         // assume cards are shuffled and take from the top, while removing it from the drawPile
         cards.removeFirst();
         return topCard;
-    }
-
-    public Card displayTopCard() {
-        List<Card> cards = this.getCards();
-        return cards.getFirst();
     }
 
     public static void printDeck(List<Card> cards) {

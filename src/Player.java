@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Player {
-    private long id;
+    private final long id;
 
     private final List<Card> playerHand = new ArrayList<>();
 
@@ -30,10 +30,10 @@ public class Player {
     // overriding the toString means that I can output the Player exactly as it should.
     @Override
     public String toString() {
-        return this.id + " + ";
+        return this.id + " ";
     }
 
-    public void playCard(int cardId, PlayPile playPile) {
+    public boolean playCard(int cardId, PlayPile playPile) {
         // get card from hand and put in play pile
         Card cardToPlay = getCardFromHand(cardId);
         Card topCard = playPile.getTopCard();
@@ -41,12 +41,10 @@ public class Player {
         if(cardToPlay.canBePlayedOn(topCard)) {
             playPile.add(cardToPlay);
             // check if a card has an effect, and use that effect
+            return true;
         } else {
-            System.out.println("Cards are not compatible.");
+            System.out.println("Cards are not compatible. Play another or choose to draw a card.");
+            return false;
         }
-
-        // remove card from hand
-        removeCardFromHand(cardId);
     }
-
 }
